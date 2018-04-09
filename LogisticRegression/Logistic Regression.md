@@ -23,7 +23,8 @@ d[“test_score”]        # list，测试集的得分(probability)
 d[“train_score”]       # list，训练集的得分(probability)
 d[“train_acc”]         # float，训练集精度
 d[“test_acc”]          # float，测试集精度
-d[“theta”]             # numpy.ndarray，习得参数d[“learning_rate”]     # int，学习率
+d[“theta”]             # numpy.ndarray，习得参数
+d[“learning_rate”]     # int，学习率
 d[“num_iterations”]    # int，迭代次数
 ```
 
