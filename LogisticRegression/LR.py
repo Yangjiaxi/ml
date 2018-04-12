@@ -93,15 +93,18 @@ def predict(theta, X):
 
 def model(train_data, train_label, test_data, test_label, iter_times, alpha, C, show_epoch=False):
     theta = initialize_zeros(train_data.shape[0])
-    params, grads, costs = optimize(theta, train_data, train_label, iter_times, alpha, C, show_epoch)
+    params, grads, costs = optimize(
+        theta, train_data, train_label, iter_times, alpha, C, show_epoch)
 
     theta = params["theta"]
 
     train_prediction, train_score = predict(theta, train_data)
     test_predction, test_score = predict(theta, test_data)
 
-    print("train accuracy: {} %".format(100 - np.mean(np.abs(train_prediction - train_label)) * 100))
-    print("test accuracy: {} %".format(100 - np.mean(np.abs(test_predction - test_label)) * 100))
+    print("train accuracy: {} %".format(
+        100 - np.mean(np.abs(train_prediction - train_label)) * 100))
+    print("test accuracy: {} %".format(
+        100 - np.mean(np.abs(test_predction - test_label)) * 100))
 
     d = {"costs": costs,
          "test_prediction": test_predction,
@@ -116,8 +119,10 @@ def model(train_data, train_label, test_data, test_label, iter_times, alpha, C, 
 
 
 if __name__ == '__main__':
-    train_data, train_label = load_file("salted_fish/salted_fish_train.csv", 'train')
-    test_data, test_label = load_file("salted_fish/salted_fish_test.csv", 'test')
+    train_data, train_label = load_file(
+        "salted_fish/salted_fish_train.csv", 'train')
+    test_data, test_label = load_file(
+        "salted_fish/salted_fish_test.csv", 'test')
     d = model(train_data,
               train_label,
               test_data,
@@ -126,5 +131,7 @@ if __name__ == '__main__':
               alpha=0.008,
               C=0.01,
               show_epoch=True)
-    print(plot_ROC(d['test_score'].reshape((-1, 1)), test_label.reshape(-1, 1), title='test data'))
-    print(plot_ROC(d['train_score'].reshape((-1, 1)), train_label.reshape(-1, 1), title="train data"))
+    print(plot_ROC(d['test_score'].reshape((-1, 1)),
+                   test_label.reshape(-1, 1), title='test data'))
+    print(plot_ROC(d['train_score'].reshape((-1, 1)),
+                   train_label.reshape(-1, 1), title="train data"))
