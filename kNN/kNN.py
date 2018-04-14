@@ -45,8 +45,8 @@ def classify_10(data, label, img, k=10):
     d_1 = np.abs(data - img)
     d_2 = d_1 ** 2
     d_3 = d_2.sum(axis=1)
-    k_N = Counter(label[d_3.argsort()][:10])
-    return sorted(k_N, key=lambda x: k_N[k])[-1]
+    k_N = Counter(label[d_3.argsort()][:k])
+    return sorted(k_N, key=lambda x: k_N[x])[-1]
 
 
 def kNN(train_img, train_label, test_img, test_label, k=10):
@@ -56,12 +56,9 @@ def kNN(train_img, train_label, test_img, test_label, k=10):
         pred = classify_10(train_img, train_label, test_img[i])
         if pred != test_label[i]:
             error_count += 1
-            print("Error occued! Real number is %d, but come back with %d" %
-                  (test_label[i], pred))
         acc_rate = 1 - 1.0 * error_count / (i + 1)
-        if(i + 1) % 100 == 0:
-            print("%d / %d tested, %f accuracy" %
-                  (i+1, len(test_img), acc_rate))
+        print("(%05d / %d) => (%d, %d) => %s => %f" %
+              (i + 1, len(test_img), pred, test_label[i], "Correct" if pred == test_label[i] else "*Error*", acc_rate))
 
 
 if __name__ == '__main__':
