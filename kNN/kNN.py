@@ -5,6 +5,7 @@ import struct
 from collections import Counter
 
 
+
 def read_data():
     train_img_path = "mnist/train-images-idx3-ubyte"
     train_lbl_path = "mnist/train-labels-idx1-ubyte"
