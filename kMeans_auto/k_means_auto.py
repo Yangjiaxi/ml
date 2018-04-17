@@ -117,9 +117,17 @@ def k_means_auto(data_set, norm=2):
         C_DBI[i] = DBI(C[i], norm)
     best_ks = sorted(C_DBI, key=lambda x: C_DBI[x])[0]
     plot_res(C[best_ks])
-    return best_ks, C[best_ks]
+    k_data = C[best_ks]
+    k_res = []
+    for i in range(best_ks):
+        i_res = []
+        for j in range(len(k_data[i])):
+            i_res.append(np.where(data == k_data[i][j])[0][0])
+        k_res.append(i_res)
+    return best_ks, k_res
 
 
 if __name__ == '__main__':
     data = read_data('watermelon_4.0.txt')
-    k, k_data = k_means_auto(data, norm=3)
+    k, split_res = k_means_auto(data, norm=3)
+    print(split_res)
