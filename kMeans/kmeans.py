@@ -13,20 +13,26 @@ def read_data(path):
 
 
 def plot_res(C_set, k):
-    color_dict = ['red',
-                  'blue',
-                  'yellow',
-                  'purple',
-                  'pink']
+    # print(len(C_set))
+    color_dict = ['red', 'blue', 'yellow', 'green',
+                  'gray', 'purple', 'orange', 'cyan', 'black']
     for i in range(k):
-        plt.scatter(np.array(C_set[i])[:, 0],
-                    np.array(C_set[i])[:, 1],
-                    color=color_dict[i])
+        plt.scatter(
+            np.array(C_set[i])[:, 0],
+            np.array(C_set[i])[:, 1],
+            color=color_dict[i])
+        for pt in C_set[i]:
+            plt.plot(
+                [pt[0], C_set[-1][i][0]],
+                [pt[1], C_set[-1][i][1]],
+                color='black',
+                linewidth=0.8)
     plt.scatter(
         np.array(C_set[-1])[:, 0],
         np.array(C_set[-1])[:, -1],
-        color='black',
-        marker='x')
+        color=color_dict[k],
+        marker='o',
+        s=100)
     plt.show()
 
 
@@ -53,4 +59,4 @@ def run(data_path, k):
 
 
 if __name__ == '__main__':
-    run('watermelon_4.0.txt', 3)
+    run('watermelon_4.0.txt', 1)
