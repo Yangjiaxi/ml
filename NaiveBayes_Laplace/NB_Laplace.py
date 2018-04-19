@@ -77,7 +77,8 @@ def pred(pos_prior, neg_prior, pos_map, neg_map, test):
         else:
             pos_prob *= pos_map[cols][test[cols][0]]
             neg_prob *= neg_map[cols][test[cols][0]]
-
+    pos_prob = round(pos_prob, 8)
+    neg_prob = round(neg_prob, 8)
     return pos_prob, neg_prob, '是' if pos_prob > neg_prob else '否'
 
 
