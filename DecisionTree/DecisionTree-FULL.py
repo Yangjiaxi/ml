@@ -1,6 +1,7 @@
 import numpy as np
 from collections import Counter
 import pandas as pd
+from TreePlotter import createPlot
 
 
 def calc_ent(data):
@@ -182,6 +183,7 @@ def decision_tree(path):
 
 if __name__ == '__main__':
     car_tree = decision_tree("car.csv")
+    createPlot(car_tree)
 
 # the line below is what output look like
 '''
