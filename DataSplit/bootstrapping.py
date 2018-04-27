@@ -2,13 +2,14 @@ import numpy as np
 import pandas as pd
 
 
-def bootstrapping(data, label, theresold=1.5):
+def bootstrapping(data, label, ratio=0.3):
     train_data = pd.DataFrame()
     train_label = []
     test_data = pd.DataFrame()
     test_label = []
     data_length = len(data)
-    iter_times = int(data_length * theresold)
+    threshold = np.log(ratio) / (data_length * np.log(1 - 1 / data_length))
+    iter_times = int(data_length * threshold)
     boot_set = set([np.random.randint(0, data_length)
                     for i in range(iter_times)])
     boot_set_diff = set(range(data_length)).difference(boot_set)
@@ -25,6 +26,6 @@ if __name__ == '__main__':
     import data_prefix
     train_data_ori, train_label_ori = data_prefix.get_data("titanic/train.csv")
     train_data, train_label, test_data, test_label = bootstrapping(
-        train_data_ori, train_label_ori)
+        train_data_ori, train_label_ori, ratio=0.3)
     for i in[train_data, train_label, test_data, test_label]:
         print(len(i) / len(train_data_ori))
