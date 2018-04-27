@@ -2,11 +2,9 @@ import numpy as np
 import pandas as pd
 
 
-def bootstrapping(data, label, ratio=0.3):
+def bootstrapping(data, ratio=0.3):
     train_data = pd.DataFrame()
-    train_label = []
     test_data = pd.DataFrame()
-    test_label = []
     data_length = len(data)
     threshold = np.log(ratio) / (data_length * np.log(1 - 1 / data_length))
     iter_times = int(data_length * threshold)
@@ -17,15 +15,11 @@ def bootstrapping(data, label, ratio=0.3):
     l_bs_d = list(boot_set_diff)
     train_data = data.iloc[l_bs]
     test_data = data.iloc[l_bs_d]
-    train_label = label[l_bs]
-    test_label = label[l_bs_d]
-    return train_data, train_label, test_data, test_label
+    return train_data, test_data
 
 
 if __name__ == '__main__':
-    import data_prefix
-    train_data_ori, train_label_ori = data_prefix.get_data("titanic/train.csv")
-    train_data, train_label, test_data, test_label = bootstrapping(
-        train_data_ori, train_label_ori, ratio=0.3)
-    for i in[train_data, train_label, test_data, test_label]:
-        print(len(i) / len(train_data_ori))
+    data_ori = pd.read_csv("car.csv")
+    train, test = bootstrapping(data_ori, ratio=0.3)
+    for item in [train, test]:
+        print(item.shape[0] / data_ori.shape[0])
