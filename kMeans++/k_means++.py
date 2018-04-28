@@ -61,6 +61,72 @@ def avg(C, norm=2):
     return avg_c
 
 
+def d_min(C_1,  C_2, norm=2):
+    l_1 = len(C_1)
+    l_2 = len(C_2)
+    min_d = float("inf")
+    for i in range(l_1):
+        for j in range(l_2):
+            ij_d = dist(C_1[i], C_2[j], norm=norm)
+            if min_d > ij_d:
+                min_d = ij_d
+    return min_d
+
+
+def diam(C, norm=2):
+    l_C = len(C)
+    max_d = 0.0
+    for i in range(l_C - 1):
+        for j in range(i+1, l_C):
+            ij_d = dist(C[i], C[j], norm=norm)
+            if ij_d > max_d:
+                max_d = ij_d
+    return max_d
+
+
+def DI(C, norm=2):
+    l_C = len(C) - 1
+    min_C = float("inf")
+    for i in range(l_C):
+        ij_min = float("inf")
+        for j in range(l_C):
+            if j != i:
+                tt1 = d_min(C[i], C[j])
+                tt2 = 0.0
+
+                for l in range(l_C):
+                    tt3 = diam(C[l])
+                    if tt3 > tt2:
+                        tt2 = tt3
+
+                tt = tt1 / tt2
+                if ij_min > tt:
+                    ij_min = tt
+        if min_C > ij_min:
+            min_C = ij_min
+    return min_C
+
+
+def tr(data, rule="DBI", norm=2):
+    switcher = {
+        "DBI": DBI,
+        "DI": DI
+    }
+    if rule in switcher:
+        return switcher[rule](data, norm)
+    else:
+        raise ValueError("Unsolved measure rule [ %s ]" % rule)
+
+
+def best(m, rule):
+    switcher = {
+        "DBI": 0,
+        "DI": -1
+    }
+    # print(sorted(m,key=lambda x:m[x]))
+    return sorted(m, key=lambda x: m[x])[switcher[rule]]
+
+
 def plus_plus_choose(data, k, norm):
     m = data.shape[0]
     # method of k_means++ to choose mean vector
@@ -135,13 +201,13 @@ def DBI(C, norm=2):
     return db_i
 
 
-def k_means_auto(data_set, method='pp', norm=2, min_split=2):
+def k_means_auto(data_set, rule='DBI', method='pp', norm=2, min_split=2, max_split=8):
     C = {}
-    C_DBI = {}
-    for i in range(min_split, 9):
-        C[i] = k_means(data_set, i, norm=norm)
-        C_DBI[i] = DBI(C[i], norm)
-    best_ks = sorted(C_DBI, key=lambda x: C_DBI[x])[0]
+    measure = {}
+    for i in range(min_split, max_split+1):
+        C[i] = k_means(data_set, i, method=method, norm=norm)
+        measure[i] = tr(C[i], rule=rule, norm=norm)
+    best_ks = best(measure, rule=rule)
     plot_res(C[best_ks])
 
     k_data = C[best_ks]
@@ -156,5 +222,7 @@ def k_means_auto(data_set, method='pp', norm=2, min_split=2):
 
 if __name__ == '__main__':
     data = read_data('watermelon_4.0.txt')
-    k, split_res = k_means_auto(data, method='pp', norm=2, min_split=3)
-    print(split_res)
+    k, split_res = k_means_auto(data, method='pp', rule="DI",
+                                norm=2, min_split=3, max_split=8)
+    for ll in split_res:
+        print(ll)
