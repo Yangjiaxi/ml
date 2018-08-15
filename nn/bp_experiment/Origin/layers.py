@@ -130,6 +130,14 @@ class Softmax(Layer):
         loss = 0
         for i in range(self.m):
             loss -= np.log(self.softmax[i, y[i]])
+            # this line can be also written as:
+            # loss = sum(k from 1 to n (the category count))[-y_k*log(y_hat_k)]
+            # we can see, if the y_k = 1 and y_hat_k = 1(nearly),
+            # this means the model, gives the right answer,
+            # so the loss of this term will be 0,
+            # means that no loss on this term,
+            # what's more, if y_hat_k is a way far from 1, the loss of this term
+            # will be large, so the loss will punish the parameter in the Net
         return loss / self.m
 
     def dirac(self, a, b):

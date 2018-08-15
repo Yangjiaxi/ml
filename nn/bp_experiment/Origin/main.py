@@ -9,7 +9,8 @@ Train(train_data,
       train_label,
       test_data,
       test_label,
-      epochs=1000,
-      lr=0.05,
-      activation="relu",
-      result_require=False)
+      epochs=5000,
+      lr=0.1,
+      decay=0.99,
+      epochs_drop=1000,
+      activation="relu")
