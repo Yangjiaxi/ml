@@ -26,7 +26,7 @@ class FC(Layer):
         return np.dot(self.x, self.W) + self.b
 
     def backprop(self, back_grad):
-        self.grad_W = np.dot(self.x.T, back_grad)
+        self.grad_W = np.dot(self.x.T, back_grad) + self.l2 * self.W
         self.grad_b = np.dot(np.ones(self.m), back_grad)
         self.grad = np.dot(back_grad, self.W.T)
         return self.grad
@@ -39,7 +39,7 @@ class FC(Layer):
 
     def update(self):
         lr = self.l_rate()
-        self.W = (1 - lr * self.l2) * self.W - lr * self.grad_W
+        self.W -= lr * self.grad_W
         self.b -= lr * self.grad_b
 
     @property
