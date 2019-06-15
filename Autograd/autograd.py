@@ -1,5 +1,7 @@
 from math import exp, log
 
+DEBUG = 1
+
 
 class Node(object):
     def __init__(self, value):
@@ -65,9 +67,9 @@ class Op(Node):
         raise NotImplementedError
 
     def __repr__(self):
-        return "Op [{}], [{}, {}] => {}".format(self.op,
-                                                self.left.value, self.right.value,
-                                                self.forward())
+        return "Op [{}]\t, [{}\t, {}\t] => {}\t".format(
+            self.op, self.left.value, self.right.value, self.forward()
+        )
 
 
 class Add(Op):
@@ -79,6 +81,8 @@ class Add(Op):
         return self.left.value + self.right.value
 
     def backward(self, backgrad=None):
+        if DEBUG:
+            print(self)
         if backgrad is None:
             backgrad = 1
         self.left.grad += 1 * backgrad
@@ -98,6 +102,8 @@ class Sub(Op):
         return self.left.value - self.right.value
 
     def backward(self, backgrad=None):
+        if DEBUG:
+            print(self)
         if backgrad is None:
             backgrad = 1
         self.left.grad += 1 * backgrad
@@ -117,6 +123,8 @@ class Mul(Op):
         return self.left.value * self.right.value
 
     def backward(self, backgrad=None):
+        if DEBUG:
+            print(self)
         if backgrad is None:
             backgrad = 1
         self.left.grad += self.right.value * backgrad
@@ -136,11 +144,14 @@ class Div(Op):
         return self.left.value / self.right.value
 
     def backward(self, backgrad=None):
+        if DEBUG:
+            print(self)
         if backgrad is None:
             backgrad = 1
         self.left.grad += backgrad / self.right.value
-        self.right.grad += backgrad * \
-            (-1 * self.left.value) / self.right.value ** 2
+        self.right.grad += (
+            backgrad * (-1 * self.left.value) / self.right.value ** 2
+        )
         if isinstance(self.left, Op):
             self.left.backward(self.left.grad)
         if isinstance(self.right, Op):
@@ -156,10 +167,15 @@ class Pow(Op):
         return self.left.value ** self.right.value
 
     def backward(self, backgrad=None):
+        if DEBUG:
+            print(self)
         if backgrad is None:
             backgrad = 1
-        self.left.grad += backgrad * self.right.value * \
-            self.left.value ** (self.right.value - 1)
+        self.left.grad += (
+            backgrad
+            * self.right.value
+            * self.left.value ** (self.right.value - 1)
+        )
         self.right.grad += backgrad * log(self.left.value) * self.value
         if isinstance(self.left, Op):
             self.left.backward(self.left.grad)
@@ -176,6 +192,8 @@ class Exp(Op):
         return exp(self.left.value)
 
     def backward(self, backgrad=None):
+        if DEBUG:
+            print(self)
         if backgrad is None:
             backgrad = 1
         self.left.grad += backgrad * self.value
@@ -186,6 +204,6 @@ class Exp(Op):
 if __name__ == "__main__":
     a = Node(3)
     b = Node(2)
-    f = (2 * a + b**a) * b
+    f = (2 * a + b ** a) * b
     f.backward()
     print(a.grad, b.grad)
